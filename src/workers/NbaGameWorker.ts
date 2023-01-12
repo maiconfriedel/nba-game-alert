@@ -5,12 +5,12 @@ import { Game } from "../models/Game";
 import { stringToDate } from "../utils/stringToDate";
 
 export class NbaGameWorker {
-  async executeWorker(league: string) {
+  async executeWorker(league: string, today: boolean) {
     const httpsAgent = new https.Agent({ rejectUnauthorized: false });
 
     const axiosResponse = await axios.request({
       method: "GET",
-      url: "https://jumperbrasil.lance.com.br/onde-ver/",
+      url: process.env.QUERY_URL,
       headers: {
         "User-Agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36",
@@ -66,7 +66,10 @@ export class NbaGameWorker {
 
     console.log(
       games.filter(
-        (a) => a.league === league && a.date?.getDate() == new Date().getDate()
+        (game) =>
+          game.league === league &&
+          game.date?.getDate() ==
+            (today ? new Date().getDate() : game.date?.getDate())
       )
     );
   }

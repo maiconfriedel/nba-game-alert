@@ -11,11 +11,14 @@
   "dependencies": {
     "axios": "^1.2.2",
     "cheerio": "^1.0.0-rc.12",
-    "cron": "^2.2.0"
+    "cron": "^2.2.0",
+    "discord.js": "^14.7.1",
+    "dotenv": "^16.0.3"
   },
   "devDependencies": {
     "@types/cheerio": "^0.22.31",
     "@types/cron": "^2.0.0",
+    "@types/dotenv": "^8.2.0",
     "@types/node": "^18.11.18",
     "rimraf": "^3.0.2",
     "ts-node-dev": "^2.0.0",
