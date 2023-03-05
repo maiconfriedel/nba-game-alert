@@ -10,7 +10,7 @@ client.once(Events.ClientReady, async (c) => {
 
   const channel = client.channels.cache.find(
     (a: any) => a.name.toLowerCase().indexOf("nba") >= 0
-  );
+  ) as TextChannel;
 
   new CronJob(
     "*/2 * * * *",
@@ -25,7 +25,7 @@ client.once(Events.ClientReady, async (c) => {
 
       message = message.substring(0, message.length - 2);
 
-      (<TextChannel>channel).send(message);
+      channel.send(message);
     },
     null,
     true,
