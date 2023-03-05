@@ -1,26 +1,36 @@
-import { Client, Events, GatewayIntentBits } from "discord.js";
+import { CronJob } from "cron";
+import { Client, Events, GatewayIntentBits, TextChannel } from "discord.js";
 import "dotenv/config";
+import { NbaGameWorker } from "./workers/NbaGameWorker";
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-client.once(Events.ClientReady, (c) => {
+client.once(Events.ClientReady, async (c) => {
   console.log(`Ready! Logged in as ${c.user.tag}`);
 
-  var channels = c.channels.cache;
+  const channel = client.channels.cache.find(
+    (a: any) => a.name.toLowerCase().indexOf("nba") >= 0
+  );
 
-  console.log(channels);
+  new CronJob(
+    "*/2 * * * *",
+    async () => {
+      const games = await new NbaGameWorker().executeWorker("NBA", true);
+
+      let message = "@here Jogos de hoje: \n\n";
+
+      games.forEach((game) => {
+        message += `**${game.title} as ${game.hour}**. Transmissão em *${game.transmission}* \n\n`;
+      });
+
+      message = message.substring(0, message.length - 2);
+
+      (<TextChannel>channel).send(message);
+    },
+    null,
+    true,
+    "America/Sao_Paulo"
+  );
 });
 
-client.login(process.env.DISCORD_TOKEN);
-
-// new CronJob(
-//   "00 12 * * *",
-//   () => {
-//     new NbaGameWorker().executeWorker("NBA", true);
-//   },
-//   null,
-//   true,
-//   "America/Sao_Paulo"
-// );
-
-// new NbaGameWorker().executeWorker("NBA", true);
+client.login(process.env.NBA_ALERT_DISCORD_TOKEN);
