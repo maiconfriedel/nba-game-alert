@@ -13,7 +13,7 @@ client.once(Events.ClientReady, async (c) => {
   ) as TextChannel;
 
   new CronJob(
-    "*/2 * * * *",
+    process.env.NBA_ALERT_CRON_EXPRESSION as string,
     async () => {
       const games = await new NbaGameWorker().executeWorker("NBA", true);
 
