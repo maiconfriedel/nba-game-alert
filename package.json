@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx src/index.ts",
     "start": "npm run build && node dist/index.js",
-    "build": "tsup src"
+    "build": "npm i && tsup src"
   },
   "dependencies": {
     "axios": "^1.2.2",
