@@ -11,9 +11,6 @@ client.once(Events.ClientReady, async (c) => {
     (a: any) => a.name.toLowerCase().indexOf("nba") >= 0
   ) as TextChannel;
 
-  // new CronJob(
-  //   process.env.NBA_ALERT_CRON_EXPRESSION as string,
-  //   async () => {
   const games = await new NbaGameWorker().executeWorker("NBA", true);
 
   let message = "@here Jogos de hoje: \n\n";
@@ -24,12 +21,9 @@ client.once(Events.ClientReady, async (c) => {
 
   message = message.substring(0, message.length - 2);
 
-  channel.send(message);
-  //   },
-  //   null,
-  //   true,
-  //   "America/Sao_Paulo"
-  // );
+  await channel.send(message);
+
+  process.exit(0);
 });
 
 client.login(process.env.NBA_ALERT_DISCORD_TOKEN);
