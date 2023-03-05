@@ -1,6 +1,7 @@
 import { CronJob } from "cron";
 import { Client, Events, GatewayIntentBits, TextChannel } from "discord.js";
 import "dotenv/config";
+import { fastify, FastifyInstance } from "fastify";
 import { NbaGameWorker } from "./workers/NbaGameWorker";
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -34,3 +35,22 @@ client.once(Events.ClientReady, async (c) => {
 });
 
 client.login(process.env.NBA_ALERT_DISCORD_TOKEN);
+
+const server: FastifyInstance = fastify({});
+
+server.get("/", async (request, reply) => {
+  return { hello: "world" };
+});
+
+const start = async () => {
+  try {
+    await server.listen({
+      port: Number.parseInt(process.env.PORT as string) || 3000,
+    });
+  } catch (err) {
+    server.log.error(err);
+    process.exit(1);
+  }
+};
+
+start();
