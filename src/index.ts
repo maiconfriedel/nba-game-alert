@@ -7,21 +7,25 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 client.once(Events.ClientReady, async (c) => {
   console.log(`Ready! Logged in as ${c.user.tag}`);
 
-  const channel = client.channels.cache.find(
-    (a: any) => a.name.toLowerCase().indexOf("nba") >= 0
-  ) as TextChannel;
+  const channels = client.channels.cache.filter(
+    (a: any) => a.name.toLowerCase().indexOf("alertas-nba") >= 0
+  );
 
-  const games = await new NbaGameWorker().executeWorker("NBA", true);
+  for (let index = 0; index < channels.size; index++) {
+    const channel = channels.at(index);
 
-  let message = "@here Jogos de hoje: \n\n";
+    const games = await new NbaGameWorker().executeWorker("NBA", true);
 
-  games.forEach((game) => {
-    message += `**${game.title} as ${game.hour}**. Transmissão em *${game.transmission}* \n\n`;
-  });
+    let message = "@here :basketball: Jogos de hoje: :basketball: \n\n";
 
-  message = message.substring(0, message.length - 2);
+    games.forEach((game) => {
+      message += `**${game.title} as ${game.hour}**. Transmissão em *${game.transmission}* \n\n`;
+    });
 
-  await channel.send(message);
+    message = message.substring(0, message.length - 2);
+
+    await (<TextChannel>channel).send(message);
+  }
 
   process.exit(0);
 });
