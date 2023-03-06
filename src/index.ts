@@ -19,7 +19,7 @@ client.once(Events.ClientReady, async (c) => {
     let message = "@here :basketball: Jogos de hoje: :basketball: \n\n";
 
     games.forEach((game) => {
-      message += `**${game.title} as ${game.hour}**. Transmissão em *${game.transmission}* \n\n`;
+      message += `**${game.title?.trim()} as ${game.hour?.trim()}**. Transmissão em *${game.transmission?.trim()}* \n\n`;
     });
 
     message = message.substring(0, message.length - 2);
